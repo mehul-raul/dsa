@@ -1,0 +1,42 @@
+class HashTable:
+    def __init__(self, size):
+        self.size = size
+        self.table = [[] for i in range(size)]
+
+    def hash_function(self, key):
+        return hash(key) % self.size
+
+    def insert(self, key, value):
+        self.table[self.hash_function(key)].append((key, value))
+
+    def search(self, key):
+        index = self.hash_function(key)
+        comparisons = sum(1 for k, _ in self.table[index])
+        for k, v in self.table[index]:
+            if k == key:
+                return v, comparisons
+        return None, comparisons
+
+def main():
+    size = int(input("Enter the size of the hash table: "))
+    chaining = HashTable(size)
+    probing = HashTable(size)
+
+    num_clients = int(input("Enter the number of clients: "))
+    for i in range(num_clients):
+        while True:
+            name, number = input("Enter client name and telephone number: ").split()
+            chaining.insert(name, number)
+            probing.insert(name, number)
+            break
+    while True:
+        key = input("Enter client name to search (or 'exit' to quit): ")
+        if key == "exit":
+            break
+        ch_result, ch_comp = chaining.search(key)
+        pr_result, pr_comp = probing.search(key)
+        print(f"Chaining: {ch_result}, Comparisons: {ch_comp}")
+        print(f"Linear Probing: {pr_result}, Comparisons: {pr_comp}")
+
+if __name__ == "__main__":
+    main()
