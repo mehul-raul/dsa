@@ -1,57 +1,57 @@
-class TreeNode:
-    def __init__(self, data):
-        self.data = data
-        self.children = []
+#include<bits/stdc++.h>
+using namespace std;
 
-    def add_child(self, child):
-        self.children.append(child)
+struct Node
+{
+    string name;
+    vector<Node*> nodes;
+    Node (string name)
+    {
+        this->name = name;
+    }
+};
 
+Node* construct()
+{
+    string rootData;
+    cout << "Enter the name here-\n";
+    cin >> rootData;
+    Node* root = new Node(rootData);
 
-def print_tree(node, level=0):
-    if node is None:
-        return
+    int n;
+    cout << "Enter the number of children-\n";
+    cin >> n;
 
-    print("  " * level + node.data)
-    for child in node.children:
-        print_tree(child, level + 1)
+    for (int i = 0; i < n; i++)
+    {
+        Node* child = construct();
+        root->nodes.push_back(child);
+    }
 
+    return root;
+}
 
-def construct_tree():
-    root = TreeNode(input("Enter book name: "))
+void display(Node* root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    cout << root->name << " : ";
+    for (int i = 0; i < root->nodes.size(); i++)
+    {
+        cout << root->nodes[i]->name << " ";
+    }
+    cout << endl;
+    for (int i = 0; i < root->nodes.size(); i++)
+    {
+        display(root->nodes[i]);
+    }
+}
 
-    while True:
-        chapter_name = input("Enter chapter name (or type 'done' to finish): ")
-        if chapter_name.lower() == "done":
-            break
-
-        chapter = TreeNode(chapter_name)
-        root.add_child(chapter)
-
-        while True:
-            section_name = input(f"Enter section name for {chapter_name} (or type 'done' to finish): ")
-            if section_name.lower() == "done":
-                break
-
-            section = TreeNode(section_name)
-            chapter.add_child(section)
-
-            while True:
-                subsection_name = input(f"Enter subsection name for {section_name} (or type 'done' to finish): ")
-                if subsection_name.lower() == "done":
-                    break
-
-                subsection = TreeNode(subsection_name)
-                section.add_child(subsection)
-
-    return root
-
-
-def main():
-    book_tree = construct_tree()
-
-    print("\nBook Structure:")
-    print_tree(book_tree)
-
-
-if __name__ == "__main__":
-    main()
+int main()
+{
+    Node* book = construct();
+    display(book);
+    return 0;
+}
