@@ -1,57 +1,104 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <string>
 using namespace std;
 
-struct Node
+struct node // Node Declaration
 {
-    string name;
-    vector<Node*> nodes;
-    Node (string name)
+    string label; // Label for the node
+    int ch_count; // Count of children nodes
+    struct node *child[10]; // Array to store children nodes
+} *root; // Root node pointer
+
+class GT // Class Declaration
+{
+public:
+    void create_tree(); // Method to create the tree
+    void display(node *r1); // Method to display the tree
+
+    GT()
     {
-        this->name = name;
+        root = NULL; // Constructor to initialize root to NULL
     }
 };
 
-Node* construct()
+void GT::create_tree() // Definition of create_tree method
 {
-    string rootData;
-    cout << "Enter the name here-\n";
-    cin >> rootData;
-    Node* root = new Node(rootData);
-
-    int n;
-    cout << "Enter the number of children-\n";
-    cin >> n;
-
-    for (int i = 0; i < n; i++)
+    int tbooks, tchapters, i, j, k;
+    root = new node; // Creating root node
+    cout << "Enter name of book : ";
+    cin.get();
+    getline(cin, root->label); // Getting book name from user
+    cout << "Enter number of chapters in book : ";
+    cin >> tchapters; // Getting number of chapters from user
+    root->ch_count = tchapters; // Setting chapter count for root
+    for (i = 0; i < tchapters; i++) // Loop through chapters
     {
-        Node* child = construct();
-        root->nodes.push_back(child);
-    }
-
-    return root;
-}
-
-void display(Node* root)
-{
-    if (root == NULL)
-    {
-        return;
-    }
-    cout << root->name << " : ";
-    for (int i = 0; i < root->nodes.size(); i++)
-    {
-        cout << root->nodes[i]->name << " ";
-    }
-    cout << endl;
-    for (int i = 0; i < root->nodes.size(); i++)
-    {
-        display(root->nodes[i]);
+        root->child[i] = new node; // Creating child node for each chapter
+        cout << "Enter the name of Chapter " << i + 1 << " : ";
+        cin.get();
+        getline(cin, root->child[i]->label); // Getting chapter name from user
+        cout << "Enter number of sections in Chapter : " << root->child[i]->label << " : ";
+        cin >> root->child[i]->ch_count; // Getting section count for each chapter
+        for (j = 0; j < root->child[i]->ch_count; j++) // Loop through sections
+        {
+            root->child[i]->child[j] = new node; // Creating child node for each section
+            cout << "Enter Name of Section " << j + 1 << " : ";
+            cin.get();
+            getline(cin, root->child[i]->child[j]->label); // Getting section name from user
+        }
     }
 }
 
-int main()
+void GT::display(node *r1) // Definition of display method
 {
-    Node* book = construct();
-    display(book);
-    return 0;
+    int i, j, tchapters;
+    if (r1 != NULL) // Check if node is not NULL
+    {
+        cout << "\n-----Book Hierarchy---"; // Display book hierarchy header
+        cout << "\n Book title : " << r1->label; // Display book title
+        tchapters = r1->ch_count; // Get chapter count
+        for (i = 0; i < tchapters; i++) // Loop through chapters
+        {
+            cout << "\nChapter " << i + 1; // Display chapter number
+            cout << " : " << r1->child[i]->label; // Display chapter name
+            cout << "\nSections : ";
+            for (j = 0; j < r1->child[i]->ch_count; j++) // Loop through sections
+            {
+                cout << "\n   " << r1->child[i]->child[j]->label; // Display section name with indentation
+            }
+        }
+    }
+    cout << endl; // New line after displaying the tree
+}
+
+int main() // Main function
+{
+    int choice; // Variable to store user choice
+    GT gt; // Creating object of GT class
+    while (1) // Infinite loop for menu
+    {
+        cout << "-----------------" << endl; // Displaying menu options
+        cout << "Book Tree Creation" << endl;
+        cout << "-----------------" << endl;
+        cout << "1.Create" << endl;
+        cout << "2.Display" << endl;
+        cout << "3.Quit" << endl;
+        cout << "Enter your choice : ";
+        cin >> choice; // Getting user choice
+        switch (choice) // Switch case for user choice
+        {
+        case 1:
+            gt.create_tree(); // Call create_tree method
+            break; // Break after creating tree
+        case 2:
+            gt.display(root); // Call display method
+            break; // Break after displaying tree
+        case 3:
+            cout << "Thanks for using this program!!!"; // Display message and exit
+            exit(1);
+        default:
+            cout << "Wrong choice!!!" << endl; // Display message for wrong choice
+        }
+    }
+    return 0; // Return statement for main function
 }
