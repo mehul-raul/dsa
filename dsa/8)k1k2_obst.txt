@@ -1,50 +1,56 @@
-#include<bits/stdc++.h>
+#include<bits/stdc++.h> // Include necessary libraries
 using namespace std;
 
-int sum(int freq[], int i, int j);
+int sum(int freq[], int i, int j); // Function prototype for sum
+
+// Function to calculate optimal cost of searching in a subtree rooted with keys[i] to keys[j]
 int optCost(int freq[], int i, int j)
 {
-    if (j < i)
+    if (j < i) // Base case: empty subtree
         return 0;
-    if (j == i)
+    if (j == i) // Base case: subtree with single element
         return freq[i];
-    int fsum = sum(freq, i, j);
-    int min = INT_MAX;
-    for (int r = i; r <= j; ++r)
+    int fsum = sum(freq, i, j); // Sum of frequencies of keys[i] to keys[j]
+    int min = INT_MAX; // Initialize minimum value
+    for (int r = i; r <= j; ++r) // Iterate through all elements as root
     {
-        int cost = optCost(freq, i, r - 1) + optCost(freq, r + 1, j);
-        if (cost < min)
+        int cost = optCost(freq, i, r - 1) + optCost(freq, r + 1, j); // Calculate cost
+        if (cost < min) // Update minimum cost if needed
             min = cost;
     }
-    return min + fsum;
+    return min + fsum; // Return total cost
 }
 
+// Function to calculate optimal cost of a binary search tree
 int optimalSearchTree(int keys[], int freq[], int n)
 {
-    return optCost(freq, 0, n - 1);
-}
-int sum(int freq[], int i, int j)
-{
-    int s = 0;
-    for (int k = i; k <= j; k++)
-        s += freq[k];
-    return s;
+    return optCost(freq, 0, n - 1); // Call the optCost function
 }
 
+// Function to calculate sum of frequencies from keys[i] to keys[j]
+int sum(int freq[], int i, int j)
+{
+    int s = 0; // Initialize sum
+    for (int k = i; k <= j; k++) // Iterate through keys[i] to keys[j]
+        s += freq[k]; // Add frequency of each key
+    return s; // Return total sum
+}
+
+// Main function
 int main()
 {
-    int number_of_keys;
-    cout << "\nEnter number of keys : ";
-    cin >> number_of_keys;
-    int keys[number_of_keys];
-    int freq[number_of_keys];
+    int number_of_keys; // Variable to store number of keys
+    cout << "\nEnter number of keys : "; // Prompt user to enter number of keys
+    cin >> number_of_keys; // Input number of keys
+    int keys[number_of_keys]; // Array to store keys
+    int freq[number_of_keys]; // Array to store frequencies
     cout << "\n";
-    for (int i = 0; i < number_of_keys; ++i)
+    for (int i = 0; i < number_of_keys; ++i) // Input keys and frequencies
     {
         cout << "Enter key and frequency : ";
         cin >> keys[i] >> freq[i];
     }
-    int n = sizeof(keys) / sizeof(keys[0]);
-    cout << "\nCost of Optimal BST : " << optimalSearchTree(keys, freq, n) << "\n";
-    return 0;
+    int n = sizeof(keys) / sizeof(keys[0]); // Calculate size of keys array
+    cout << "\nCost of Optimal BST : " << optimalSearchTree(keys, freq, n) << "\n"; // Print cost of optimal BST
+    return 0; // Return statement for main function
 }
